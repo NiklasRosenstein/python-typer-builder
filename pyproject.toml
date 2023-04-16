@@ -24,6 +24,7 @@ python = "^3.7"
 typer = "^0.7.0"
 typeapi = "^1.4.1"
 nr-stream = "^1.1.5"
+deprecated = "^1.2.13"
 
 [tool.poetry.dev-dependencies]
 black = "*"
@@ -31,6 +32,7 @@ flake8 = "*"
 isort = "*"
 mypy = "*"
 pytest = "*"
+types-deprecated = "^1.2.9.2"
 
 [tool.slap]
 typed = true
@@ -38,7 +40,7 @@ typed = true
 [tool.slap.test]
 check = "slap check"
 mypy = "dmypy run src/"
-pytest = "pytest -vv"
+pytest = "pytest -vv --doctest-modules"
 black = "black --check src/"
 isort = "isort --check-only src/"
 flake8 = "flake8 src/"

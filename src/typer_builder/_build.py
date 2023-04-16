@@ -63,7 +63,7 @@ def build_app_from_module(
             sub_app = build_app_from_module(
                 submodule_info.name,
                 typer_options=typer_options,
-                dependencies=dependencies,
+                dependencies=dependencies.fork(),
                 event_loop=event_loop,
             )
             app.add_typer(sub_app)

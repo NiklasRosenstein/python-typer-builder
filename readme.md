@@ -67,7 +67,7 @@ from typer import Option
 
 def callback(
     config_file: Path = Option(Path("~/.config/mypackage.ini"), help="Path to the configuration file."),
-    dependencies: DependencyInjector = DelayedBinding(CliConfig),
+    dependencies: DependencyInjector = DependenctyInjector.Provides(CliConfig),
 ) -> None:
     dependencies.register_supplier(CliConfig, lambda: CliConfig.load(config_file))
 ```
