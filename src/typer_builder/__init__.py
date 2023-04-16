@@ -1,4 +1,4 @@
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 
 from .build_app import build_app_from_module
 from .Dependencies import DelayedBinding, Dependencies, DependencyInjectionError, DependencyInjector
