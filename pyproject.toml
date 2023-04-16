@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "typer-builder"
-version = "0.0.7"
+version = "0.0.8"
 description = ""
 authors = ["Niklas Rosenstein <rosensteinniklas@gmail.com>"]
 license = "MIT"
@@ -36,6 +36,9 @@ types-deprecated = "^1.2.9.2"
 
 [tool.slap]
 typed = true
+
+[tool.slap.release]
+branch = "main"
 
 [tool.slap.test]
 check = "slap check"
