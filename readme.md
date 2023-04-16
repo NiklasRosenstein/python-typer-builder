@@ -88,6 +88,10 @@ Note that the `Dependencies` does not understand generics with different type pa
 no distinction between `MyGeneric[int]` and `MyGeneric[str]`. This is a limitation of the current implementation as well
 as the Python type system.
 
-> The most common use case for dependency injection is to inject configuration managers or clients into subcommands.
+The most common use case for dependency injection is to inject configuration managers or clients into subcommands. For
+an example, you should check out the [examples/dependency-injection](./examples/dependency-injection) directory.
 
-For an example, you should check out the [examples/dependency-injection](./examples/dependency-injection) directory.
+
+## License
+
+This project is licensed under the terms of the MIT license.
