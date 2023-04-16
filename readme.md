@@ -1,13 +1,38 @@
 # typer-builder
 
   [Typer]: https://typer.tiangolo.com/
+  [pep585]: https://www.python.org/dev/peps/pep-0585/
+  [pep604]: https://www.python.org/dev/peps/pep-0604/
+  [typeapi]: https://github.com/NiklasRosenstein/python-typeapi
 
-This package allows you to easily build a [Typer][] CLI application from a Python module hierarchy.
+A framework for simplifying the development of [Typer][] based CLIs supporting modern type hints and hierarchical
+dependency injection. 
 
-### Quickstart
+__Table of Contents__
+
+* [Introduction](#introduction)
+  * [Example](#example)
+* [Documentation](#documentation)
+  * [New-style type hint support](#new-style-type-hint-support)
+  * [Dependency injection](#dependency-injection)
+
+
+## Introduction
+
+The `build_app_from_module()` inspect a hierarchy of Python modules to build a Typer command and group structure.
+Packages are treated as command groups and may define a `callback()` member. Modules are treated commands and must
+define a `main()` member. Modules and packages prefixed with an underscore ( `_` ) are ignored. Help text is extracted
+from the `main()` docstring or the module docstring.
+
+In addition, we provide support for new-style type hints ([PEP 585 - Type Hinting Generics in Standard Collections][pep585]
+and [PEP 604 - Union Operators][pep604]) in older versions of Python as well as adapt it for Typer (e.g. `list[str]`
+and `str | None`), as well as a method of injecting dependencies to functions that are not sourced from the command-line.
+
+
+### Example
 
 ```
-$ tree src/mypackage/commands/
+$ tree src/mypackage/
 src/mypackage/
 ├── __init__.py
 ├── __main__.py
@@ -32,69 +57,37 @@ if __name__ == "__main__":
     app()
 ```
 
-### Features
 
-* Packages are treated as command groups and _may_ define a `def callback(): ...` (see `Typer.add_callback()`).
-* Modules are treated as commands and _must_ define a `def main(): ...` (see `Typer.command()`).
-* Underscores in package or module names are normalized to hyphens (e.g `my_command` -> `my-command`).
-* Command(-group) help text is extracted from the package or module docstring, or from the `main()` docstring.
-* [WIP] Improved and dynamic dependency injection.
-* Support for new-style type hints in older versions of Python and Typer (e.g. `str | None`).
+## Documentation
 
-### Dependency Injection
+### New-style type hint support
 
-The `typer_builder.DependencyInjector` is essentially a mapping of types to a corresponding implementation. It allows
-you to bind any function to the given dependencies based on the function signature.
-
-The `build_app_from_module()` takes a `dependencies` argument which populates a `DependencyInjector`. All `callback()`
-and `main()` functions encountered and added to a `typer.Typer` object are first bound to the dependencies that can be
-served by the injector.
-
-The types for which injection can take place must be known in advance. If the implementation is not known in advance,
-a `callback()` can accept the `DependencyInjector` as an argument and inform about the dependencies that will be
-provided by the callback, allowing any of its subcommands to resolve it.
+Through [`typeapi`][typeapi], we can convert new-tyle type hints such as `str | None` or `list[int]` to their corresponding
+representation using `typing` before the function signature is parsed by [Typer][].
 
 ```py
-# src/mypackages/commands/__init__.py
-"""
-This is a cool CLI that uses typer-builder.
-"""
+# src/mypackage/commands/create_user.py
+from ___future__ import annotations
 
-from mypackage.config import CliConfig
-from pathlib import Path
-from typer_builder import DependencyInjector, DelayedBinding
-from typer import Option
-
-def callback(
-    config_file: Path = Option(Path("~/.config/mypackage.ini"), help="Path to the configuration file."),
-    dependencies: DependencyInjector = DependenctyInjector.Provides(CliConfig),
-) -> None:
-    dependencies.register_supplier(CliConfig, lambda: CliConfig.load(config_file))
-```
-
-```py
-# src/mypackage/commands/hello.py
-from mypackage.config import CliConfig
-
-def main(name: str, config: CliConfig) -> None:
+def main(name: str | None = None, groups: list[str] | None = None) -> None:
     # ...
 ```
 
-In the above example, the `config` parameter is not passed by [Typer][], but instead by the `DependencyInjector` per the implementation in the previous `callback()` snippet.
+[`typeapi`][typeapi] also allows us to convert `list[str]` to `List[str]` and `dict[str, int]` to `Dict[str, int]` for
+Python versions prior to 3.9. This is necessary because [Typer][] does not support the new-style type hints.
 
-__Known caveats__
+### Dependency injection
 
-* Only concrete types are supported (no `Optional[CliConfig]` or vice versa).
+The `typer_builder.DependencyInjector` object is used to map types to concrete values or functions that provide them.
+Functions wrapped with `DependencyInjector.bind()` will have their arguments resolved by the injector based on type
+annotations. Every `build_app_from_module()` call creates a new `DependencyInjector` instance. Dependencies can be
+injected from the outside by passing a `DependencyInjector` instance to `build_app_from_module()` or by providing
+additional dependencies via a `callback()` function on the command group.
 
-## New-style type hint support
+Note that the `DependencyInjector` does not understand generics with different type parameters. For example, it makes
+no distinction between `MyGeneric[int]` and `MyGeneric[str]`. This is a limitation of the current implementation as well
+as the Python type system.
 
-Through `typeapi`, we can convert new-tyle type hints such as `str | None` or `list[int]` to their corresponding
-representation using `typing` before the function signature is parsed by [Typer][]. Usually, ty
+> The most common use case for dependency injection is to inject configuration managers or clients into subcommands.
 
-```py
-# src/mypackage/commands/hello.py
-from mypackage.config import CliConfig
-
-def main(name: str | None = None) -> None:
-    # ...
-```
+For an example, you should check out the [examples/dependency-injection](./examples/dependency-injection) directory.

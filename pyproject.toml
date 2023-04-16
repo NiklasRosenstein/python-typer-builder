@@ -39,14 +39,14 @@ typed = true
 
 [tool.slap.test]
 check = "slap check"
-mypy = "dmypy run src/"
-pytest = "pytest -vv --doctest-modules"
-black = "black --check src/"
-isort = "isort --check-only src/"
-flake8 = "flake8 src/"
+mypy = "dmypy run src/ test/ examples/"
+pytest = "pytest -vv --doctest-modules src/ test/"
+black = "black --check src/ test/ examples/"
+isort = "isort --check-only src/ test/ examples/"
+flake8 = "flake8 src/ test/ examples/"
 
 [tool.slap.run]
-fmt = "black src/ && isort src/"
+fmt = "black src/ test/ examples/ && isort src/ test/ examples/"
 
 [tool.mypy]
 python_version = "3.7"
