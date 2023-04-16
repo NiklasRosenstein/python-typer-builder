@@ -45,7 +45,7 @@ def build_app_from_module(
     assert module.__file__, f"module {module_name!r} has no __file__"
     assert Path(module.__file__).stem == "__init__", f"expected a package for {module_name!r}"
 
-    name = name or module_name.rpartition(".")[-1]
+    name = name or module_name.rpartition(".")[-1].replace("_", "-")
     app = Typer(name=name, help=module.__doc__, **(typer_options or {}))
 
     if hasattr(module, "callback"):

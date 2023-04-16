@@ -1,0 +1,5 @@
+[[entries]]
+id = "e66791dc-668b-4d64-a936-f679195bb0d9"
+type = "fix"
+description = "Fixed subcommand group names, replacing underscores with hyphens as is also the case for commands."
+author = "@NiklasRosenstein"
