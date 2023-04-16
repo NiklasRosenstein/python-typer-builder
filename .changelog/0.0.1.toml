@@ -1,0 +1,13 @@
+release-date = "2023-03-15"
+
+[[entries]]
+id = "6aea7021-5ebb-405c-8993-aba1ccc41fa0"
+type = "breaking change"
+description = "Underscores in module names are now replaced with hyphens when deriving the Typer subcommand name."
+author = "rosensteinniklas@gmail.com"
+
+[[entries]]
+id = "dbed51c8-b77f-4fb6-aa37-b4817758d878"
+type = "fix"
+description = "Raise an exception for non-types early in `get_dependency_for_type()`. This catches for example `typing` type hints which are not currently supported but also do not have a `__name__`, causing an `AttributeError` later without this check."
+author = "rosensteinniklas@gmail.com"

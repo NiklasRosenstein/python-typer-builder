@@ -1,0 +1,7 @@
+release-date = "2023-03-23"
+
+[[entries]]
+id = "8b763f0d-ab27-4553-98d9-9626b84c5a6a"
+type = "fix"
+description = "Fix excluding submodules when they start with an underscore from being treated as providing a `main()` function for Typer subcommands."
+author = "rosensteinniklas@gmail.com"

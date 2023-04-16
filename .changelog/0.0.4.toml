@@ -1,0 +1,7 @@
+release-date = "2023-03-23"
+
+[[entries]]
+id = "ced40e39-2b28-4ef1-8a66-29b653c7cbc6"
+type = "feature"
+description = "Support PEP 585 - Type Hinting Generics In Standard Collections and PEP 604 - Allow writing union types as `X | Y` in function signatures passed to Typer by evaluating them with `typeapi`."
+author = "rosensteinniklas@gmail.com"

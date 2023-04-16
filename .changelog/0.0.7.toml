@@ -1,0 +1,7 @@
+release-date = "2023-04-01"
+
+[[entries]]
+id = "22f2a640-a945-4ba9-9250-58928971650e"
+type = "fix"
+description = "add missing nr-stream dependency"
+author = "rosensteinniklas@gmail.com"

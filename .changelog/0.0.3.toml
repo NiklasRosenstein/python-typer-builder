@@ -1,0 +1,7 @@
+release-date = "2023-03-23"
+
+[[entries]]
+id = "435f1c65-ccc3-4bba-a479-7ae27b1e2176"
+type = "fix"
+description = "Treat types added via `DependencyInjector.register_supplier()` as delayed bindings."
+author = "rosensteinniklas@gmail.com"

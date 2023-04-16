@@ -1,0 +1,7 @@
+release-date = "2023-03-23"
+
+[[entries]]
+id = "b2a5f022-153b-44ae-a663-65f752b3eec2"
+type = "fix"
+description = "Actually fix checking if the submodule starts with `_` to ignore it."
+author = "rosensteinniklas@gmail.com"
