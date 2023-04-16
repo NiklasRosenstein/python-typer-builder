@@ -11,14 +11,14 @@ from typing import Any, Callable, Coroutine, Mapping, Sequence
 from typeapi import get_annotations
 from typer import Exit, Typer
 
-from ._injector import DependencyInjector
+from .Dependencies import Dependencies
 
 
 def build_app_from_module(
     module_name: str,
     name: str | None = None,
     typer_options: Mapping[str, Any] | None = None,
-    dependencies: DependencyInjector | Sequence[Any] = (),
+    dependencies: Dependencies | Sequence[Any] = (),
     event_loop: asyncio.AbstractEventLoop | None = None,
 ) -> Typer:
     """
@@ -38,8 +38,8 @@ def build_app_from_module(
         event_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(event_loop)
 
-    if not isinstance(dependencies, DependencyInjector):
-        dependencies = DependencyInjector(*dependencies)
+    if not isinstance(dependencies, Dependencies):
+        dependencies = Dependencies(*dependencies)
 
     module = import_module(module_name)
     assert module.__file__, f"module {module_name!r} has no __file__"
@@ -79,7 +79,7 @@ def build_app_from_module(
 
 
 def _prepare_typer_func(
-    func: Callable[..., int | None], dependencies: DependencyInjector, event_loop: asyncio.AbstractEventLoop
+    func: Callable[..., int | None], dependencies: Dependencies, event_loop: asyncio.AbstractEventLoop
 ) -> Callable[..., None]:
     func = _evaluate_type_hints(func)
     if iscoroutinefunction(func):

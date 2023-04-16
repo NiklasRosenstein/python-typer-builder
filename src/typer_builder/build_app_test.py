@@ -5,7 +5,7 @@ from typing import List, Optional
 from pytest import raises
 from typer import Typer
 
-from typer_builder._build import _evaluate_type_hints
+from typer_builder.build_app import _evaluate_type_hints
 
 
 def test__evaluate_type_hints() -> None:

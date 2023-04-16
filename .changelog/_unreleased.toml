@@ -1,47 +1,59 @@
 [[entries]]
 id = "548c196b-4ffc-4a79-b41a-373abeb3f6ad"
 type = "improvement"
-description = "Add `DependencyInjector.get()` and deprecated `DependencyInjector.get_depoendency_for_type()`"
+description = "Add `Dependencies.get()` and deprecated `Dependencies.get_depoendency_for_type()`"
 author = "@NiklasRosenstein"
 
 [[entries]]
 id = "9be4193a-1c5b-4762-ad19-01981019f6f1"
 type = "improvement"
-description = "Add `DependencyInjector.set()`"
+description = "Add `Dependencies.set()`"
 author = "@NiklasRosenstein"
 
 [[entries]]
 id = "92ddb465-1e33-4694-8b67-2a99bc9162e3"
 type = "improvement"
-description = "Add `DependencyInjector.set_supplier()` and deprecated `DependencyInjector.register_supplier()`"
+description = "Add `Dependencies.set_supplier()` and deprecated `Dependencies.register_supplier()`"
 author = "@NiklasRosenstein"
 
 [[entries]]
 id = "01e92f36-9982-4211-80bb-1956d04d4b61"
 type = "improvement"
-description = "`DependencyInjector.bind()` can now be used as a decorator."
+description = "`Dependencies.bind()` can now be used as a decorator."
 author = "@NiklasRosenstein"
 
 [[entries]]
 id = "59f90d75-22bb-4185-8cc9-dcc920762f3b"
 type = "improvement"
-description = "Dependencies bound with `DependencyInjector.bind()` are now always evalauted lazily and never directly bound with the currently declared value."
+description = "Dependencies bound with `Dependencies.bind()` are now always evalauted lazily and never directly bound with the currently declared value."
 author = "@NiklasRosenstein"
 
 [[entries]]
 id = "d9514687-b549-4968-a9c0-1f7de7a9d0f7"
 type = "improvement"
-description = "Add `DependencyInjector.Provides()` and deprecated `DelayedBinding()` function"
+description = "Add `Dependencies.Provides()` and deprecated `DelayedBinding()` function"
 author = "@NiklasRosenstein"
 
 [[entries]]
 id = "7071e6e8-b40d-4533-8f73-7aa5c7f3238f"
 type = "improvement"
-description = "Add `DependencyInjector.fork()`"
+description = "Add `Dependencies.fork()`"
 author = "@NiklasRosenstein"
 
 [[entries]]
 id = "e00b961d-4862-4418-afe7-52f5a8dadbd1"
 type = "improvement"
-description = "`build_app_from_module()` now uses `DependencyInjector.fork()` to prevent that type declarations through `DependenyInjector.Provides()` or other modifications propagate up to parent groups and commands in the Typer hierarchy."
+description = "`build_app_from_module()` now uses `Dependencies.fork()` to prevent that type declarations through `DependenyInjector.Provides()` or other modifications propagate up to parent groups and commands in the Typer hierarchy."
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "2cca82d4-c103-4f89-9290-139c3f83e9d5"
+type = "improvement"
+description = "Rename `DependencyInjector` to `Dependencies` but keep backwards compatible name."
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "6af2c92e-ffd5-4e07-ac41-a8c8b0b69cbb"
+type = "improvement"
+description = "Rename `DependencyInjectionError` to `Dependencies.Error` but keep backwards compatible name."
 author = "@NiklasRosenstein"

@@ -78,13 +78,13 @@ Python versions prior to 3.9. This is necessary because [Typer][] does not suppo
 
 ### Dependency injection
 
-The `typer_builder.DependencyInjector` object is used to map types to concrete values or functions that provide them.
-Functions wrapped with `DependencyInjector.bind()` will have their arguments resolved by the injector based on type
-annotations. Every `build_app_from_module()` call creates a new `DependencyInjector` instance. Dependencies can be
-injected from the outside by passing a `DependencyInjector` instance to `build_app_from_module()` or by providing
+The `typer_builder.Dependencies` object is used to map types to concrete values or functions that provide them.
+Functions wrapped with `Dependencies.bind()` will have their arguments resolved by the injector based on type
+annotations. Every `build_app_from_module()` call creates a new `Dependencies` instance. Dependencies can be
+injected from the outside by passing a `Dependencies` instance to `build_app_from_module()` or by providing
 additional dependencies via a `callback()` function on the command group.
 
-Note that the `DependencyInjector` does not understand generics with different type parameters. For example, it makes
+Note that the `Dependencies` does not understand generics with different type parameters. For example, it makes
 no distinction between `MyGeneric[int]` and `MyGeneric[str]`. This is a limitation of the current implementation as well
 as the Python type system.
 

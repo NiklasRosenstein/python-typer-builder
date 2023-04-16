@@ -16,14 +16,13 @@ from nr.stream import Supplier
 T = TypeVar("T")
 
 
-class DependencyInjectionError(Exception):
-    pass
-
-
-class DependencyInjector:
+class Dependencies:
     """
     Arranges for dependency injection based on function signatures.
     """
+
+    class Error(Exception):
+        pass
 
     @dataclass
     class _Declared:
@@ -43,9 +42,9 @@ class DependencyInjector:
 
     _mapping: MutableMapping[Type[Any], _Declared | _Instance | _Supplier]
 
-    def __init__(self, *objects: object, parent: DependencyInjector | None = None) -> None:
+    def __init__(self, *objects: object, parent: Dependencies | None = None) -> None:
         self._parent = parent
-        self._mapping = ChainMap({DependencyInjector: self._Instance(self)}, parent._mapping if parent else {})
+        self._mapping = ChainMap({Dependencies: self._Instance(self)}, parent._mapping if parent else {})
         for obj in objects:
             if type(obj) in self._mapping:
                 raise TypeError(
@@ -71,12 +70,12 @@ class DependencyInjector:
         """
 
         if not isinstance(type_, type):
-            raise DependencyInjectionError(f"cannot provide dependency for non-type: {type_!r}")
+            raise Dependencies.Error(f"cannot provide dependency for non-type: {type_!r}")
 
         if type_ in self._mapping:
             value = self._mapping[type_]
             if isinstance(value, self._Declared):
-                raise DependencyInjectionError(
+                raise Dependencies.Error(
                     f"unable to provide a dependency for type {type_.__name__}, but the type was declared"
                 )
             elif isinstance(value, self._Supplier):
@@ -84,7 +83,7 @@ class DependencyInjector:
             else:
                 return cast(T, value.value)
 
-        raise DependencyInjectionError(f"unable to provide a dependency for type {type_.__name__}")
+        raise Dependencies.Error(f"unable to provide a dependency for type {type_.__name__}")
 
     def set(self, type_: Type[T], instance: T) -> None:
         """
@@ -192,7 +191,7 @@ class DependencyInjector:
             #       injector that has the current one as a parent delegate instead of globally declaring
             #       the bindings defined here.
             default = sig.parameters[key].default
-            if value == DependencyInjector and isinstance(default, DependencyInjector._Provides):
+            if value == Dependencies and isinstance(default, Dependencies._Provides):
                 for type_ in default.types:
                     self.declare(type_)
 
@@ -201,10 +200,10 @@ class DependencyInjector:
             elif value in self._mapping:
                 bindings.add(key)
             elif not allow_unresolved and sig.parameters[key].default is sig.parameters[key].empty:
-                raise DependencyInjectionError(f"unable to provide dependency for {key!r} of type {value!r}")
+                raise Dependencies.Error(f"unable to provide dependency for {key!r} of type {value!r}")
 
         if not allow_unresolved and remaining:
-            raise DependencyInjectionError(f"unable to provide dependencies for {remaining}")
+            raise Dependencies.Error(f"unable to provide dependencies for {remaining}")
 
         if return_annotation is not undefined:
             remaining["return"] = return_annotation
@@ -228,7 +227,7 @@ class DependencyInjector:
     def Provides(*types: Type[Any]) -> Any:
         """
         This function should be used as the default value on a parameter that expects a parameter that expects a
-        #DependencyInjector, indicating that the function will supply the injector with additional dependencies of
+        #Dependencies, indicating that the function will supply the injector with additional dependencies of
         the given types.
 
         When a function is bound using #bind(), the injector will automatically declare the types given to this
@@ -237,27 +236,27 @@ class DependencyInjector:
 
         Example:
 
-        >>> def foo(injector: DependencyInjector = DependencyInjector.Provides(int, str)):
+        >>> def foo(injector: Dependencies = Dependencies.Provides(int, str)):
         ...     injector.set(int, 42)
         ...     injector.set(str, "Hello, world!")
         ...
-        >>> injector = DependencyInjector()
+        >>> injector = Dependencies()
         >>> foo = injector.bind(foo)
         >>> injector.get(int)  # doctest: +IGNORE_EXCEPTION_DETAIL
         Traceback (most recent call last):
-        DependencyInjectionError: unable to provide a dependency for type int, but the type was declared
+        Dependencies.Error: unable to provide a dependency for type int, but the type was declared
         >>> foo()
         >>> injector.get(int)
         42
         """
 
-        return DependencyInjector._Provides(list(types))
+        return Dependencies._Provides(list(types))
 
-    def fork(self) -> DependencyInjector:
+    def fork(self) -> Dependencies:
         """
         Create a new injector that inherits the bindings of this injector.
 
-        >>> a = DependencyInjector()
+        >>> a = Dependencies()
         >>> a.set(int, 42)
         >>> b = a.fork()
         >>> b.set(str, "Hello, world!")
@@ -267,18 +266,29 @@ class DependencyInjector:
         42
         >>> a.get(str)  # doctest: +IGNORE_EXCEPTION_DETAIL
         Traceback (most recent call last):
-        DependencyInjectionError: unable to provide a dependency for type str
+        Dependencies.Error: unable to provide a dependency for type str
         >>> b.get(str)
         'Hello, world!'
         """
 
-        return DependencyInjector(parent=self)
+        return Dependencies(parent=self)
 
 
-@deprecated(reason="use DependencyInjector.Provides() instead", version="0.0.8")
+@deprecated(reason="use Dependencies.Provides() instead", version="0.0.8")
 def DelayedBinding(*types: Type[Any]) -> Any:
     """
-    Deprecated. Use #DependencyInjector.Provides() instead.
+    Deprecated. Use #Dependencies.Provides() instead.
     """
 
-    return DependencyInjector.Provides(*types)
+    return Dependencies.Provides(*types)
+
+
+@deprecated(reason="use Dependencies instead", version="0.0.8")
+class DependencyInjector(Dependencies):
+    """
+    Deprecated. Use #Dependencies instead.
+    """
+
+
+# Deprecated, use Dependencies.Error instead.
+DependencyInjectionError = Dependencies.Error
