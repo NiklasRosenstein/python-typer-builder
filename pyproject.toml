@@ -14,10 +14,10 @@ classifiers = []
 keywords = []
 
 [tool.poetry.urls]
-# "Bug Tracker" = ""
+"Bug Tracker" = "https://github.com/NiklasRosenstein/python-typer-builder/issues"
 # Documentation = ""
 # Homepage = ""
-# Repository = ""
+Repository = "https://github.com/NiklasRosenstein/typer-builder"
 
 [tool.poetry.dependencies]
 python = "^3.7"
