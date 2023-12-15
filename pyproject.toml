@@ -20,11 +20,11 @@ keywords = []
 Repository = "https://github.com/NiklasRosenstein/typer-builder"
 
 [tool.poetry.dependencies]
-python = "^3.7"
-typer = "^0.7.0"
-typeapi = "^1.4.1"
+python = ">=3.7"
+typer = "*"
+typeapi = "^2.0.0"
 nr-stream = "^1.1.5"
-deprecated = "^1.2.13"
+deprecated = "*"
 
 [tool.poetry.dev-dependencies]
 black = "*"
