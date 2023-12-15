@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "typer-builder"
-version = "0.0.10"
+version = "0.0.11"
 description = ""
 authors = ["Niklas Rosenstein <rosensteinniklas@gmail.com>"]
 license = "MIT"
@@ -22,7 +22,7 @@ Repository = "https://github.com/NiklasRosenstein/typer-builder"
 [tool.poetry.dependencies]
 python = ">=3.7"
 typer = "*"
-typeapi = "^2.0.0"
+typeapi = "*"
 nr-stream = "^1.1.5"
 deprecated = "*"
 
